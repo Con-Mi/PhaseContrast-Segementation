@@ -20,7 +20,7 @@ INPUT_CSV = "../data/AugmentedData/train_input_imgs.csv"
 LABEL_CSV = "../data/AugmentedData/train_label_imgs.csv"
 
 # Hyperparameters
-batch_size = 12
+batch_size = 16
 nr_epochs = 50
 momentum = 0.93
 lr_rate = 0.035
