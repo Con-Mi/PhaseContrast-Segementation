@@ -68,7 +68,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                 input_img = input_img.cuda() if use_cuda else input_img
                 labels = labels.cuda() if use_cuda else labels
                 contour_labels = contour_labels.cuda() if use_cuda else contour_labels
-                waterhed_labels = waterhed_labels.cuda() if use_cuda else waterhed_labels
+                watershed_labels = watershed_labels.cuda() if use_cuda else watershed_labels
                 
                 out = torch.cat([labels, contour_labels, watershed_labels], dim=1)
                 
