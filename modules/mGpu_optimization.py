@@ -77,7 +77,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                 with torch.set_grad_enabled(phase == "train"):
                     
                     preds = cust_model(input_img)
-                    loss = criterion(preds, labels)
+                    loss = criterion(preds, out)
 
                     if phase == "train":
                         loss.backward()
