@@ -64,10 +64,14 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
             jaccard_acc = 0.0
             dice_loss = 0.0
 
-            for input_img, label, contour_label, watershed_label in tqdm(dataloaders[phase], total=len(dataloaders[phase])):
+            for input_img, labels, contour_labels, watershed_labels in tqdm(dataloaders[phase], total=len(dataloaders[phase])):
                 input_img = input_img.cuda() if use_cuda else input_img
                 labels = labels.cuda() if use_cuda else labels
-
+                contour_labels = contour_labels.cuda() if use_cuda else contour_labels
+                waterhed_labels = waterhed_labels.cuda() if use_cuda else waterhed_labels
+                
+                out = torch.cat([labels, contour_labels, watershed_labels], dim=1)
+                
                 optimizer.zero_grad()
 
                 with torch.set_grad_enabled(phase == "train"):
