@@ -42,7 +42,7 @@ optimizerSGD = optim.SGD(segm_model.parameters(), lr=lr_rate, momentum=momentum)
 criterion = nn.BCEWithLogitsLoss().cuda() if use_cuda else nn.BCEWithLogitsLoss()
 scheduler = optim.lr_scheduler.MultiStepLR(optimizerSGD, milestones=milestones, gamma=gamma)
 
-train_loader, valid_loader = PhaseContrastTrainValidLoader(INPUT_CSV, LABEL_CSV, input_chnls=1, data_transform=transforms.Compose(mul_transf), mode="train", validation_split=0.1, batch_sz=2, workers=0, data_root="../data/AugmentedData")
+train_loader, valid_loader = PhaseContrastTrainValidLoader(INPUT_CSV, LABEL_CSV, input_chnls=1, data_transform=transforms.Compose(mul_transf), mode="train", validation_split=0.1, batch_sz=batch_size, workers=0, data_root="../data/AugmentedData")
 
 dict_loaders = {"train":train_loader, "valid":valid_loader}
 
