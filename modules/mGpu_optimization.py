@@ -84,6 +84,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                         optimizer.step()
                 running_loss += loss.item() * input_img.size(0)
                 jaccard_acc += jaccard(out, torch.sigmoid(preds))
+                # watersh_jaccard_acc += jaccard(watershed_labels, torch.sigmoid(preds[?]))
 #                 dice_acc += dice(labels, torch.sigmoid(preds))
             
             epoch_loss = running_loss / len(dataloaders[phase])
