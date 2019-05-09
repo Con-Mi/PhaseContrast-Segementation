@@ -64,6 +64,9 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                 cust_model.eval()
             running_loss = 0.0
             jaccard_acc = 0.0
+            label_jaccard_acc = 0.0
+            watersh_jaccard_acc = 0.0
+            contour_jaccard_acc = 0.0
             # dice_loss = 0.0
 
             for inputs in tqdm(dataloaders[phase], total=len(dataloaders[phase])):
