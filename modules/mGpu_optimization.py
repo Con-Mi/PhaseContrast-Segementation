@@ -23,7 +23,7 @@ LABEL_CSV = "../data/AugmentedData/train_label_imgs.csv"
 
 # Hyperparameters
 batch_size = 16
-nr_epochs = 50
+nr_epochs = 20
 momentum = 0.93
 lr_rate = 0.035
 milestones = [ 7, 13, 18, 25, 30, 35, 41, 46, 48 ]
@@ -64,7 +64,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                 cust_model.eval()
             running_loss = 0.0
             jaccard_acc = 0.0
-            dice_loss = 0.0
+            # dice_loss = 0.0
 
             for inputs in tqdm(dataloaders[phase], total=len(dataloaders[phase])):
                 input_img = inputs[0].cuda() if use_cuda else inputs[0]
