@@ -12,8 +12,6 @@ import copy
 from tqdm import tqdm
 
 
-from matplotlib import pyplot as plt
-
 # GPU FLAG
 use_cuda = torch.cuda.is_available()
 
