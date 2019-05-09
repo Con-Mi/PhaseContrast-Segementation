@@ -103,7 +103,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
             print("_"*15)
             if phase == "valid" and aver_jaccard > best_acc:
                 best_acc = aver_jaccard
-                best_model_wts = copy.deepcopy(cust_model.state_dict)
+                best_model_wts = copy.deepcopy(cust_model)
             if phase == "valid":
                 val_acc_history.append(aver_jaccard)
         print("^"*15)
@@ -113,7 +113,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
     print("Training Complete in {:.0f}m {:.0f}s".format(time_elapsed//60, time_elapsed % 60))
     print("Best Validation Accuracy: {:.4f}".format(best_acc))
     # best_model_wts = copy.deepcopy(cust_model.state_dict())
-    cust_model.load_state_dict(best_model_wts)
+    cust_model.load_state_dict(best_model_wts.state_dict())
     return cust_model, val_acc_history
 
 segm_model, acc = train_model(segm_model, dict_loaders, criterion, optimizerSGD, nr_epochs, scheduler=scheduler)
