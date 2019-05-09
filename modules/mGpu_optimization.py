@@ -98,7 +98,8 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
             aver_watersh_jaccard = watersh_jaccard_acc / len(dataloaders[phase])
             aver_contour_jaccard = contour_jaccard_acc / len(dataloaders[phase])
 
-            print("| {} Loss: {:.4f} | Jaccard Average Acc: {:.4f} | Label Jaccard Average Acc: {:.4f} | Watershed Jaccard Average Acc: {:.4f} | Contour Jaccard Average Acc: {:.4f} |".format(phase, epoch_loss, aver_jaccard, aver_label_jaccard, aver_watersh_jaccard, aver_contour_jaccard))
+            print("| {} Loss: {:.4f} | Jaccard Average Acc: {:.4f} |".format(phase, epoch_loss, aver_jaccard))
+            print("| Label Jaccard Average Acc: {:.4f} | Watershed Jaccard Average Acc: {:.4f} | Contour Jaccard Average Acc: {:.4f} |".format(aver_label_jaccard, aver_watersh_jaccard, aver_contour_jaccard))
             print("_"*15)
             if phase == "valid" and aver_jaccard > best_acc:
                 best_acc = aver_jaccard
@@ -111,7 +112,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
     time_elapsed = time.time() - start_time
     print("Training Complete in {:.0f}m {:.0f}s".format(time_elapsed//60, time_elapsed % 60))
     print("Best Validation Accuracy: {:.4f}".format(best_acc))
-    best_model_wts = copy.deepcopy(cust_model.state_dict())
+    # best_model_wts = copy.deepcopy(cust_model.state_dict())
     cust_model.load_state_dict(best_model_wts)
     return cust_model, val_acc_history
 
