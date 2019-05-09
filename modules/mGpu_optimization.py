@@ -72,13 +72,8 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                 contour_labels = inputs[2].cuda() if use_cuda else inputs[2]
                 watershed_labels = inputs[3].cuda() if use_cuda else inputs[3]
 
-                print(inputs.size())
-                plt.imshow(contour_labels.squeeze().detach().numpy())
-                plt.show()
-
-                """
                 out = torch.cat([labels, contour_labels, watershed_labels], dim=1)
-                
+
                 optimizer.zero_grad()
 
                 with torch.set_grad_enabled(phase == "train"):
@@ -91,13 +86,18 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                         optimizer.step()
                 running_loss += loss.item() * input_img.size(0)
                 jaccard_acc += jaccard(out, torch.sigmoid(preds))
-                # watersh_jaccard_acc += jaccard(watershed_labels, torch.sigmoid(preds[?]))
+                label_jaccard_acc += jaccard(labels, torch.sigmoid(preds[:, 0, :, :]))
+                watersh_jaccard_acc += jaccard(contour_labels, torch.sigmoid(preds[:, 1, :, :]))
+                contour_jaccard_acc += jaccard(watershed_labels, torch.sigmoid(preds[:, 2, :, :]))
                 # dice_acc += dice(labels, torch.sigmoid(preds))
             
             epoch_loss = running_loss / len(dataloaders[phase])
             aver_jaccard = jaccard_acc / len(dataloaders[phase])
+            aver_label_jaccard = label_jaccard_acc / len(dataloaders[phase])
+            aver_watersh_jaccard = watersh_jaccard_acc / len(dataloaders[phase])
+            aver_contour_jaccard = contour_jaccard_acc / len(dataloaders[phase])
 
-            print("| {} Loss: {:.4f} | Jaccard Average Acc: {:.4f} |".format(phase, epoch_loss, aver_jaccard))
+            print("| {} Loss: {:.4f} | Jaccard Average Acc: {:.4f} | Label Jaccard Average Acc: {:.4f} | Watershed Jaccard Average Acc: {:.4f} | Contour Jaccard Average Acc: {:.4f} |".format(phase, epoch_loss, aver_jaccard, aver_label_jaccard, aver_watersh_jaccard, aver_contour_jaccard))
             print("_"*15)
             if phase == "valid" and aver_jaccard > best_acc:
                 best_acc = aver_jaccard
@@ -113,7 +113,6 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
     best_model_wts = copy.deepcopy(cust_model.state_dict())
     cust_model.load_state_dict(best_model_wts)
     return cust_model, val_acc_history
-    """
-    return None
+
 segm_model, acc = train_model(segm_model, dict_loaders, criterion, optimizerSGD, nr_epochs, scheduler=scheduler)
 save_model(segm_model, name="dense_linknet_512_sgd_bce.pt")
