@@ -7,7 +7,8 @@ from torchvision import transforms
 
 
 # Image Path
-IMG_PATH = "../../example_imgs/ex1.jpg"
+# IMG_PATH = "../../example_imgs/ex1.jpg"
+IMG_PATH = "../../data/TrainingData/images/0065_.tif"
 
 # Binary Path
 BIN_PATH  = "../../binaries/dense_linknet_512_sgd_bce.pt"
@@ -17,7 +18,8 @@ img_size=512
 
 tsfm = transforms.Compose([transforms.Resize((img_size, img_size)) , transforms.ToTensor()])
 
-img = Image.open(IMG_PATH).convert("L")
+# img = Image.open(IMG_PATH).convert("L")
+img = Image.open(IMG_PATH)
 img = tsfm(img)
 img = img.unsqueeze(dim=0)
 segm_model = DenseLinkModel(input_channels=1, num_classes=3)

@@ -1,4 +1,5 @@
 from dataloader_skimage import PhaseContrastDataset
+from matplotlib import pyplot as plt
 
 
 input_csv_file = "../data/TrainingData/train_input_imgs.csv"
@@ -11,5 +12,6 @@ data = PhaseContrastDataset(input_csv_file, label_csv_file, input_chnls=1, data_
 
 for i, label in enumerate(data):
     # print(label[0])
-    print(label[3].shape)
+    plt.imshow(label[1])
+    plt.show()
     # print(i)

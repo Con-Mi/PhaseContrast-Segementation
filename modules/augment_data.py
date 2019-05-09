@@ -93,7 +93,7 @@ print("Finished augmentations for miscalleneous..")
 # Adjusting exposure            = 1
 print("Adjusting Exposure..")
 for j, sample in tqdm(enumerate(data), total=len(data)):
-    img, label, watershed_label, contour_label = sample
+    img, label, contour_label, watershed_label = sample
     new_img = exposure.adjust_gamma(img, gamma=0.4, gain=0.9)
     
     new_img = Image.fromarray(new_img)

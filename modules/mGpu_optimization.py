@@ -12,6 +12,8 @@ import copy
 from tqdm import tqdm
 
 
+from matplotlib import pyplot as plt
+
 # GPU FLAG
 use_cuda = torch.cuda.is_available()
 
@@ -20,7 +22,7 @@ INPUT_CSV = "../data/AugmentedData/train_input_imgs.csv"
 LABEL_CSV = "../data/AugmentedData/train_label_imgs.csv"
 
 # Hyperparameters
-batch_size = 16
+batch_size = 1
 nr_epochs = 50
 momentum = 0.93
 lr_rate = 0.035
@@ -64,12 +66,17 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
             jaccard_acc = 0.0
             dice_loss = 0.0
 
-            for input_img, labels, contour_labels, watershed_labels in tqdm(dataloaders[phase], total=len(dataloaders[phase])):
-                input_img = input_img.cuda() if use_cuda else input_img
-                labels = labels.cuda() if use_cuda else labels
-                contour_labels = contour_labels.cuda() if use_cuda else contour_labels
-                watershed_labels = watershed_labels.cuda() if use_cuda else watershed_labels
-                
+            for inputs in tqdm(dataloaders[phase], total=len(dataloaders[phase])):
+                input_img = inputs[0].cuda() if use_cuda else inputs[0]
+                labels = inputs[1].cuda() if use_cuda else inputs[1]
+                contour_labels = inputs[2].cuda() if use_cuda else inputs[2]
+                watershed_labels = inputs[3].cuda() if use_cuda else inputs[3]
+
+                print(inputs.size())
+                plt.imshow(contour_labels.squeeze().detach().numpy())
+                plt.show()
+
+                """
                 out = torch.cat([labels, contour_labels, watershed_labels], dim=1)
                 
                 optimizer.zero_grad()
@@ -85,7 +92,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                 running_loss += loss.item() * input_img.size(0)
                 jaccard_acc += jaccard(out, torch.sigmoid(preds))
                 # watersh_jaccard_acc += jaccard(watershed_labels, torch.sigmoid(preds[?]))
-#                 dice_acc += dice(labels, torch.sigmoid(preds))
+                # dice_acc += dice(labels, torch.sigmoid(preds))
             
             epoch_loss = running_loss / len(dataloaders[phase])
             aver_jaccard = jaccard_acc / len(dataloaders[phase])
@@ -106,6 +113,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
     best_model_wts = copy.deepcopy(cust_model.state_dict())
     cust_model.load_state_dict(best_model_wts)
     return cust_model, val_acc_history
-
+    """
+    return None
 segm_model, acc = train_model(segm_model, dict_loaders, criterion, optimizerSGD, nr_epochs, scheduler=scheduler)
 save_model(segm_model, name="dense_linknet_512_sgd_bce.pt")
